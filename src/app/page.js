@@ -18,13 +18,16 @@ import { useRouter } from "next/navigation";
 
 export default function PatientDashboard() {
   const [user,setUser] = useState({})
+  const [loading,setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview");
   const router = useRouter();
   
   useEffect(() => {
   let token = localStorage.getItem('token');
- 
-  axios.get('http://localhost:5000/api/users/get-user-data', {
+ if(!token){
+  router.push('/login')
+ }
+  axios.get('https://pheonixlabs-backend.onrender.com/api/users/get-user-data', {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -36,10 +39,12 @@ export default function PatientDashboard() {
       router.push("/userdetails");
     }
     setUser(res.data.data.user)
+    setLoading(false)
   })
   .catch(err => {
     // handle error
     console.error(err);
+    router.push('/login')
   });
 }, []);
 
@@ -111,7 +116,8 @@ const handleSignOut =()=>{
   );
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    loading? (<div></div>):
+    (<div className="flex h-screen bg-gray-50">
       {/* Left Sidebar */}
       <div className="w-64 bg-white shadow-md p-6 flex flex-col">
         <div className="mb-8">
@@ -770,6 +776,8 @@ const handleSignOut =()=>{
           )}
         </main>
       </div>
-    </div>
+    </div>)
+ 
+
   );
 }

@@ -44,7 +44,7 @@ export default function UserDetails() {
     const token = localStorage.getItem('token'); // Adjust key name as per your storage
 
 axios.post(
-  'http://localhost:5000/api/users/update-profile',
+  'https://pheonixlabs-backend.onrender.com/api/users/update-profile',
   { ...userData },
   {
     headers: {
